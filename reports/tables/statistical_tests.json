@@ -1,0 +1,8 @@
+{
+  "trend_per_month": 5.788600866104476,
+  "trend_pvalue_HAC": 0.0,
+  "seasonality_pvalue_HAC": 2.471450140432821e-307,
+  "ADF_pvalue_trend_specification": 1.3485996321215893e-13,
+  "Shapiro_residuals_pvalue": 3.42538551521354e-05,
+  "LjungBox_residuals_lag12_pvalue": 0.23195203636298936
+}

@@ -1,0 +1,23 @@
+{
+  "selected_model": "Régression harmonique",
+  "validation_criterion": "Moyenne des MAE par fenêtre",
+  "calibration_size": 35,
+  "test": {
+    "MAE": 32.071636751691564,
+    "RMSE": 37.927892642799115,
+    "sMAPE": 2.118137170134808,
+    "MASE": 0.41701271108751664,
+    "coverage80": 0.8333333333333334,
+    "coverage95": 0.9166666666666666,
+    "width80": 99.18128317585342,
+    "width95": 139.39687090011603
+  },
+  "environment": {
+    "python": "3.14.7",
+    "numpy": "2.5.2",
+    "pandas": "3.1.0",
+    "scipy": "1.18.1",
+    "statsmodels": "0.15.0",
+    "matplotlib": "3.11.2"
+  }
+}
