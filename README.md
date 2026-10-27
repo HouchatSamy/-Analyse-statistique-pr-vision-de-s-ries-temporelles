@@ -5,11 +5,9 @@
 
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)](src/analysis.py)
 [![R](https://img.shields.io/badge/R-4.3+-276DC3?style=flat&logo=r&logoColor=white)](scripts/analyse.R)
-[![Tests](https://img.shields.io/badge/Tests-unittest%20passing-brightgreen)](tests/test_analysis.py)
-[![Status](https://img.shields.io/badge/Projet-SA%C3%89%20Acad%C3%A9mique%20Valid%C3%A9e-blue)](docs/VERIFICATION.md)
 
-> **Cadre académique :** Projet universitaire mené dans le cadre de la **SAÉ Séries Temporelles** (Situation d'Apprentissage et d'Évaluation) en **2e année de BUT Science des Données**, parcours **EMS (Exploration et Modélisation Statistique)**.  
-> L'étude porte sur la modélisation statistique et la prévision de la **demande mensuelle (2018–2025)** à partir du jeu de données fourni par l'équipe enseignante, avec une double implémentation miroir en **Python** et en **R de base**.
+> **Cadre académique :** Projet universitaire mené dans le cadre de la **SAÉ Séries Temporelles** (Situation d'Apprentissage et d'Évaluation) en **2e année de BUT Science des Données**, parcourant les méthodes d'analyse statistique et de prévision.  
+> L'étude porte sur la modélisation statistique et la prévision de la **demande mensuelle (2018–2025)** à partir du jeu de données fourni par l'équipe enseignante, avec une double implantation en Python et en R.
 
 ---
 
@@ -33,11 +31,10 @@ Ce projet a été conçu selon les standards de la science des données moderne,
 
 | Catégorie | Outils & Technologies | Rôle et Utilisation dans le Projet |
 |---|---|---|
-| **Langages de programmation** | **Python 3.12+**<br>**R 4.3+** | • **Python** : Pipeline de production automatisé de bout en bout (`src/analysis.py`).<br>• **R base** : Implémentation miroir autonome dans `scripts/analyse.R`, développée sous RStudio sans dépendance externe CRAN pour une portabilité maximale. |
-| **Logiciels & IDE** | **RStudio**<br>**VS Code**<br>**JupyterLab** | • **RStudio** : Développement et exécution des scripts statistiques R, graphiques de décomposition `stl`.<br>• **VS Code** : Développement modulaire Python, gestion des environnements virtuels et tests unitaires.<br>• **JupyterLab** : Exploration interactive et restitution pédagogique (`notebooks/01_analysis.ipynb`). |
-| **Bibliothèques Python** | `pandas`, `numpy`<br>`scipy`<br>`statsmodels`<br>`matplotlib` | • `pandas` & `numpy` : Ingestion, contrôle d'intégrité, indexation temporelle mensuelle (`MS`), calculs vectorisés.<br>• `scipy.stats` : Inférence statistique, test de normalité de Shapiro-Wilk.<br>• `statsmodels` : Modélisation OLS, décomposition STL, lissage Holt-Winters, test ADF, test de Ljung-Box, covariance robuste HAC (Newey-West).<br>• `matplotlib` : Visualisation scientifique de qualité publication. |
-| **Packages R (Base)** | `stats`, `graphics`<br>`utils` | • Fonctions de modélisation : `lm()`, `HoltWinters()`, `stl()`.<br>• Fonctions de diagnostic : `shapiro.test()`, `Box.test()`, `anova()`. |
-| **Qualité & DevOps** | **Git / GitHub**<br>`unittest`<br>`venv` | • Versionnement Git et structuration modulaire professionnelle.<br>• Suite de 6 tests unitaires automatisés (`tests/test_analysis.py`).<br>• Fichiers d'environnement figés (`requirements.txt`, `requirements-lock.txt`). |
+| **Langages de programmation** | **Python 3.12+**<br>**R 4.3+** | • **Python** : Pipeline de production automatisé de bout en bout (`src/analysis.py`).<br>• **R base** : Implémentation miroir autonome en `scripts/analyse.R` pour la modélisation statistique, la décomposition, les diagnostics et les prévisions. |
+| **Logiciels & IDE** | **RStudio**<br>**VS Code**<br>**JupyterLab** | • **RStudio** : Développement et exécution des scripts statistiques R, graphiques de décomposition `stl`.<br>• **VS Code** : Développement Python et structure de code modulaire.<br>• **JupyterLab** : Exploration interactive et documentation analytique. |
+| **Bibliothèques Python** | `pandas`, `numpy`<br>`scipy`<br>`statsmodels`<br>`matplotlib` | • `pandas` & `numpy` : Ingestion, contrôle d'intégrité, indexation temporelle mensuelle (`MS`), calculs de série chronologique.<br>• `scipy` : diagnostics et statistiques avancées.<br>• `statsmodels` : modèles, ADF, HAC, test Ljung-Box, etc.<br>• `matplotlib` : génération des figures de synthèse. |
+| **Packages R (Base)** | `stats`, `graphics`<br>`utils` | • Fonctions de modélisation : `lm()`, `HoltWinters()`, `stl()`.<br>• Fonctions de diagnostic : `shapiro.test()`, `Box.test()`, `anova()`, etc. |
 
 ---
 
@@ -63,7 +60,7 @@ flowchart TD
 ### 1. Préparation & Ingestion Causale des Données
 - **Audit d'intégrité** : Détection des doublons temporels, contrôle des formats de date (début de mois `MS`), repérage des valeurs négatives impossibles dans un contexte de demande.
 - **Agrégation** : Médiane par date pour neutraliser l'impact des doublons sans introduire de biais de moyenne.
-- **Imputation strictement causale** : Remplacement des valeurs manquantes par la valeur du même mois de l'année précédente ($y_{t-12}$), ou à défaut par la médiane du passé disponible ($y_{1..t-1}$). **Interdiction absolue d'utiliser les données futures** (*no look-ahead bias*).
+- **Imputation strictement causale** : Remplacement des valeurs manquantes par la valeur du même mois de l'année précédente ($y_{t-12}$), ou à défaut par la médiane du passé disponible ($y_{1..t-1}$).
 - **Isolation des imputations** : Marquage booléen strict (`imputed`) pour exclure impérativement ces points du calcul des scores d'erreur en validation.
 
 ### 2. Analyse Exploratoire & Décomposition des Séries Chronologiques
@@ -93,7 +90,7 @@ flowchart TD
 
 ### 5. Inférence Statistique & Tests d'Hypothèses
 - **Test de racine unitaire ADF (Augmented Dickey-Fuller)** : Spécification avec constante et tendance déterministe ($p = 1.35 \times 10^{-13}$ : rejet de l'hypothèse de non-stationnarité stochastique).
-- **Test conjoint de Wald sur la saisonnalité** : Test de nullité simultanée des coefficients harmoniques $\alpha_1, \gamma_1, \alpha_2, \gamma_2$ ($p = 2.47 \times 10^{-307}$ : saisonnalité hautement significative).
+- **Test conjoint de Wald sur la saisonnalité** : Test de nullité simultanée des coefficients harmoniques $\alpha_1, \gamma_1, \alpha_2, \gamma_2$ ($p = 2.47 \times 10^{-307}$ : saisonnalité haute et structurée).
 - **Correction HAC de Newey-West** : Matrice de variance-covariance robuste à l'autocorrélation (12 retards) et à l'hétéroscédasticité conditionnelle.
 - **Test de Ljung-Box sur résidus** : Test d'absence d'autocorrélation résiduelle globale sur 12 retards ($p = 0.232$ : pas de dépendance résiduelle significative au seuil de 5 %).
 - **Test de Shapiro-Wilk** : Diagnostic de normalité des résidus ($p = 3.43 \times 10^{-5}$ : rejet de la normalité, justifiant le recours à des intervalles empiriques non paramétriques).
@@ -137,7 +134,7 @@ Les modèles sont évalués sur les 3 fenêtres temporelles successives en exclu
 ### Étape 5 : Diagnostics d'adéquation et inférence statistique
 - Analyse des résidus de la régression harmonique sur l'ensemble d'apprentissage (84 mois).
 - Vérification que la régression capture l'intégralité de la structure temporelle : le test de Ljung-Box ($p = 0.232$) confirme l'absence de résidu d'autocorrélation à 12 mois.
-- La non-normalité constatée par le test de Shapiro-Wilk confirme la pertinence d'adopter des **intervalles de prévision non paramétriques (quantiles empiriques)** plutôt qu'une approximation gaussienne théorique.
+- La non-normalité constatée par le test de Shapiro-Wilk confirme la pertinence d'adopter des **intervalles de prévision non paramétriques (quantiles empiriques)** plutôt qu'une approximation gaussienne.
 
 ![Diagnostics des résidus](reports/figures/06_diagnostics.png)
 
@@ -181,51 +178,29 @@ Le modèle retenu est entraîné sur 2018–2024 (84 mois) et projeté sur l'ann
 ├── src/
 │   ├── analysis.py                  # Pipeline complet de production Python
 │   └── generate_data.py             # Générateur de données synthétiques pour tests unitaires
-├── tests/
-│   └── test_analysis.py             # 6 tests unitaires automatisés (unittest)
-├── requirements.txt                 # Dépendances Python de production
-├── requirements-lock.txt            # Environnement complet gelé
-└── README.md                        # Documentation de référence du projet
+├── README.md                        # Documentation de référence du projet
+└── CV_Samy_Houchat.pdf              # CV associé au projet
 ```
 
 ---
 
 ## 💻 Instructions d'Exécution & Reproductibilité
 
-### Option 1 : Environnement Python
-
-```bash
-# 1. Création et activation de l'environnement virtuel
-python -m venv .venv
-# Sous Windows :
-.venv\Scripts\activate
-# Sous Linux / macOS :
-source .venv/bin/activate
-
-# 2. Installation des dépendances requises
-pip install -r requirements.txt
-
-# 3. Exécution de la suite de tests unitaires
-python -m unittest discover -s tests -v
-
-# 4. Lancement du pipeline complet (nettoyage, modélisation, graphiques, tables)
-python -m src.analysis
-```
-
-Pour explorer le notebook Jupyter interactif :
-```bash
-pip install jupyterlab
-jupyter lab notebooks/01_analysis.ipynb
-```
-
-### Option 2 : Environnement R (RStudio / Terminal)
+### Option 1 : Environnement R (RStudio / Terminal)
 
 Le script R fonctionne entièrement en **R de base** sans installation de packages CRAN :
 ```bash
 # Depuis la racine du projet :
 Rscript scripts/analyse.R
 ```
-Sous **RStudio** : ouvrir le projet, définir le répertoire racine comme dossier de travail (`setwd`), puis exécuter `source("scripts/analyse.R")`. Les résultats et le graphique de décomposition sont automatiquement enregistrés dans `reports/r/`.
+Sous **RStudio** : ouvrir le projet, définir le répertoire racine comme dossier de travail (`setwd`), puis exécuter `source("scripts/analyse.R")`. Les résultats et le graphique de décomposition sont générés automatiquement dans le dossier `reports/`.
+
+### Option 2 : Environnement Python
+
+Le pipeline Python est également exécutable directement depuis la racine du projet :
+```bash
+python -m src.analysis
+```
 
 ---
 
